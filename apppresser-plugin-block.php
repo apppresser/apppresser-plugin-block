@@ -7,7 +7,7 @@ Version: 1.0
 Author URI: http://apppresser.com
 */
 
-class ReactorPluginBlock {
+class AppPresserPluginBlock {
 
 	// A single instance of this class.
 	public static $instance    = null;
@@ -86,7 +86,7 @@ class ReactorPluginBlock {
 
 
 }
-ReactorPluginBlock::run();
+AppPresserPluginBlock::run();
 
 
 function appp_filter_exclude_plugins( $exclude = array() ) {

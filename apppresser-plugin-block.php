@@ -57,7 +57,9 @@ class AppPresserPluginBlock {
 	// remove some plugins
 	function appp_filter_plugins( $active = array() ) {
 		
-		if( isset( $_GET['appp'] ) && $_GET['appp'] == 1 || isset( $_COOKIE['AppPresser_Appp'] ) && $_COOKIE['AppPresser_Appp'] === 'true' ) {
+		if( isset( $_GET['appp'] ) && ( $_GET['appp'] == 1 || $_GET['appp'] == 2 ) &&  || 
+			isset( $_COOKIE['AppPresser_Appp'] ) && $_COOKIE['AppPresser_Appp'] === 'true' ||
+			isset( $_COOKIE['AppPresser_Appp2'] ) && $_COOKIE['AppPresser_Appp2'] === 'true' ) {
 	
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
 	

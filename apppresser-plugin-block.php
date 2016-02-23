@@ -16,6 +16,7 @@ class AppPresserPluginBlock {
 	const VERSION              = '1.0';
 	public static $dir_path;
 	public static $dir_url;
+	public static $is_apppv;
 
 	/**
 	* run function.
@@ -56,10 +57,12 @@ class AppPresserPluginBlock {
 	
 	// remove some plugins
 	function appp_filter_plugins( $active = array() ) {
-		
-		if( isset( $_GET['appp'] ) || isset( $_COOKIE['AppPresser_Appp'] ) || isset( $_COOKIE['AppPresser_Appp2'] ) ) {
-	
+
+		if( !is_admin() && self::read_app_version() && wp_is_mobile() ) {
+
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
+
+			// $exclude = maybe_unserialize( $exclude );
 	
 			foreach ( $exclude as $plugin ) {
 				$key = array_search( $plugin, $active );
@@ -72,6 +75,20 @@ class AppPresserPluginBlock {
 		return $active;
 	}
 
+	public static function read_app_version() {
+		if ( self::$is_apppv !== null )
+			return self::$is_apppv;
+
+		if( isset( $_GET['appp'] ) && $_GET['appp'] == 2 || isset( $_COOKIE['AppPresser_Appp2'] ) && $_COOKIE['AppPresser_Appp2'] === 'true' ) {
+			self::$is_apppv = 2;
+		} else if( ( isset( $_GET['appp'] ) && $_GET['appp'] == 1 ) || isset( $_COOKIE['AppPresser_Appp'] ) && $_COOKIE['AppPresser_Appp'] === 'true' ) {
+			self::$is_apppv = 1;
+		} else {
+			self::$is_apppv = 0;
+		}
+
+		return self::$is_apppv;
+	}
 
 	/**
 	* apppresser_required function.
@@ -124,8 +141,20 @@ function section_one_callback() {
 
 function field_one_callback() {
     $setting = maybe_unserialize( get_option( 'apppresser-plugin-block' ) );
-    
-    //var_dump($settings);
+
+    // Crazy, WordPress will serialize it twice, WHAT!
+    $setting = maybe_unserialize( maybe_unserialize( $setting ) );
+
+    $active_plugins = get_option('active_plugins');
+
+    $apl=get_option('active_plugins');
+    $plugins=get_plugins();
+    $activated_plugins=array();
+    foreach ($apl as $p){           
+        if(isset($plugins[$p])){
+             array_push($activated_plugins, $plugins[$p]);
+        }           
+    }
             
     $plugins = get_plugins();
     
@@ -143,15 +172,51 @@ function field_one_callback() {
     
     $plugins = array_diff_key($plugins, $keep);        
     $array_keys = array_keys( $plugins );
-    
-	foreach( $array_keys as $key ){	
-		
-		if( !empty($setting) )
-		$checked = ( in_array( $key, $setting ) ) ? $checked = 'checked="checked"' : $checked = '' ;
 
-		echo "<input type='checkbox' $checked name='apppresser-plugin-block[]' value='$key' />" . $plugins[$key]['Title'] . '</br>';
+    $active_html = '';
+    $deactive_html = '';
+    
+	foreach( $array_keys as $key ) {
+		
+		$checked = ( !empty($setting) && in_array( $key, $setting ) ) ? 'checked="checked"' : '' ;
+
+		if( in_array( $key, $active_plugins ) ) {
+			$status = '<span class="wp-ui-text-highlight">active</span>';
+			$before = '<strong>';
+			$after  = '</strong>';
+			$css  = 'active';
+		} else {
+			$status = '<span class="wp-ui-text-notification">deactive</span>';
+			$before = '';
+			$after  = '';
+			$css  = 'deactive';
+		}
+		
+		 $html = "<p><input class=\"$css\" type='checkbox' $checked name='apppresser-plugin-block[]' value='$key' />" . $before . $plugins[$key]['Title'] . $after . ' - ' . $status . '</p>';
+
+		 if( $before ) {
+		 	$active_html .= $html;
+		 } else {
+		 	$deactive_html .= $html;
+		 }
 	}
-        
+
+	echo '<div class="disable-plugins">';
+    echo '<p><a href="#" onclick="selectAllPlugins()">select all</a> | <a href="#" onclick="selectNonePlugins()">select none</a></p>';
+    echo $active_html;
+    // echo $deactive_html;
+    echo '</div>';
+    echo '<script type="text/javascript">
+    	function selectAllPlugins() {
+    		jQuery(\'input[type="checkbox"]\').prop( "checked", true );
+    		return false;
+    	}
+    	function selectNonePlugins() {
+    		jQuery(\'input[type="checkbox"]\').prop( "checked", false );
+    		return false;
+    	}
+    	</script>
+    ';
 }
 
 function apb_validate_input( $input ) {

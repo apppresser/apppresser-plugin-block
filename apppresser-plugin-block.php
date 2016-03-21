@@ -58,7 +58,7 @@ class AppPresserPluginBlock {
 	// remove some plugins
 	function appp_filter_plugins( $active = array() ) {
 
-		if( !is_admin() && self::read_app_version() && wp_is_mobile() ) {
+		if( !is_admin() && self::read_app_version() && ( !function_exists('wp_is_mobile') || function_exists('wp_is_mobile') && wp_is_mobile() ) ) {
 
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
 

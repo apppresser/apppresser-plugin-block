@@ -45,7 +45,8 @@ class AppPresserPluginBlock {
 		self::$dir_url = trailingslashit( plugins_url( null , __FILE__ ) );
 
 		// is main plugin active? If not, throw a notice and deactivate
-		if ( ! in_array( 'apppresser/apppresser.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+		if ( is_array($active_plugins) && ! in_array( 'apppresser/apppresser.php', $active_plugins ) ) {
 			add_action( 'all_admin_notices', array( $this, 'apppresser_required' ) );
 			return;
 		}
@@ -62,7 +63,7 @@ class AppPresserPluginBlock {
 
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
 
-			// $exclude = maybe_unserialize( $exclude );
+			$exclude = maybe_unserialize( $exclude );
 	
 			foreach ( $exclude as $plugin ) {
 				$key = array_search( $plugin, $active );

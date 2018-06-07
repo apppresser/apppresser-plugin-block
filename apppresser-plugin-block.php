@@ -51,7 +51,7 @@ class AppPresserPluginBlock {
 			return;
 		}
 
-		add_filter( 'option_active_plugins', array( $this, 'appp_filter_plugins' ), 5 );
+		add_filter( 'option_active_plugins', array( $this, 'appp_filter_plugins' ), 1 );
 		
 	}
 	
@@ -59,7 +59,7 @@ class AppPresserPluginBlock {
 	// remove some plugins
 	function appp_filter_plugins( $active = array() ) {
 
-		if( !is_admin() && self::read_app_version() && ( !function_exists('wp_is_mobile') || function_exists('wp_is_mobile') && wp_is_mobile() ) ) {
+		if( !is_admin() && self::read_app_version() ) {
 
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
 
@@ -161,17 +161,18 @@ function field_one_callback() {
             
     $plugins = get_plugins();
     
-    $keep = array(
-    	'apppresser-plugin-block/apppresser-plugin-block.php' => '',
-    	'apppresser/apppresser.php' => '',
-    	'appgeo/apppresser-geolocation.php' => '',
-    	'appbuddy/appbuddy.php' => '',
-    	'appcamera/appp-camera.php' => '',
-    	'apppush/appp-push.php' => '',
-    	'appshare/appshare.php' => '',
-    	'appswiper/apppresser-swipers.php' => '',
-    	'appwoo/apppresser-woocommerce.php' => ''
-    );
+	$keep = array(
+		'apppresser-plugin-block/apppresser-plugin-block.php' => '',
+		'apppresser/apppresser.php' => '',
+		'appgeo/apppresser-geolocation.php' => '',
+		'appbuddy/appbuddy.php' => '',
+		'appcamera/appp-camera.php' => '',
+		'apppush/appp-push.php' => '',
+		'appshare/appshare.php' => '',
+		'appswiper/apppresser-swipers.php' => '',
+		'appfbconnect/appfbconnect.php' => '',
+		'appwoo/apppresser-woocommerce.php' => ''
+	);
     
     $plugins = array_diff_key($plugins, $keep);        
     $array_keys = array_keys( $plugins );

@@ -1,7 +1,7 @@
-# apppresser-plugin-block
+# AppPresser Plugin Block
 
-Add apppresser-plugin-block.php to wp-contents/mu-plugins
+Disable conflicting plugins only in the app. Works great for solving conflicts, does not affect your normal website.
 
-go to settings > plugin block and select plugins to block. 
+Add to your wp-content/mu-plugins folder via FTP, then visit Settings => Plugin Block.
 
-This blocks chosen plugins when using AppPresser apps.
+For installation instructions please visit https://docs.apppresser.com/article/438-plugin-blocker

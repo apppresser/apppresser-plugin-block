@@ -3,8 +3,8 @@
 Plugin Name: AppPresser Plugin Block
 Description: Blocks plugins from loading in AppPreser app.
 Author: AppPresser Team
-Version: 1.0
-Author URI: http://apppresser.com
+Version: 2.0
+Author URI: https://apppresser.com
 */
 
 class AppPresserPluginBlock {
@@ -13,7 +13,7 @@ class AppPresserPluginBlock {
 	public static $instance    = null;
 	public static $this_plugin = null;
 	const PLUGIN               = 'AppPresser Plugin Block';
-	const VERSION              = '1.0';
+	const VERSION              = '2.0';
 	public static $dir_path;
 	public static $dir_url;
 	public static $is_apppv;
@@ -51,7 +51,8 @@ class AppPresserPluginBlock {
 			return;
 		}
 
-		add_filter( 'option_active_plugins', array( $this, 'appp_filter_plugins' ), 1 );
+		add_filter( 'option_active_plugins', array( $this, 'appp_filter_plugins' ), 5 );
+		add_filter( 'site_option_active_sitewide_plugins', array( $this, 'appp_filter_plugins' ) );
 		
 	}
 	
@@ -66,9 +67,15 @@ class AppPresserPluginBlock {
 			$exclude = maybe_unserialize( $exclude );
 	
 			foreach ( $exclude as $plugin ) {
-				$key = array_search( $plugin, $active );
-				if ( false !== $key ) {
-					unset( $active[ $key ] );
+
+				if( current_filter() == 'option_active_plugins' ) {
+					$key = array_search( $plugin, $active );
+				} else {
+					$key = !empty( $active[$plugin] ) ? $plugin : false;
+				}
+
+				if( false !== $key ) {
+					unset( $active[$key] );
 				}
 			}
 		}
@@ -161,7 +168,7 @@ function field_one_callback() {
             
     $plugins = get_plugins();
     
-	$keep = array(
+    $keep = array(
 		'apppresser-plugin-block/apppresser-plugin-block.php' => '',
 		'apppresser/apppresser.php' => '',
 		'appgeo/apppresser-geolocation.php' => '',

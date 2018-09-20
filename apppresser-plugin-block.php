@@ -178,6 +178,8 @@ function field_one_callback() {
 		'appshare/appshare.php' => '',
 		'appswiper/apppresser-swipers.php' => '',
 		'appfbconnect/appfbconnect.php' => '',
+		'appcommunity/appcommunity.php' => '',
+		'applms/applms.php' => '',
 		'appwoo/apppresser-woocommerce.php' => ''
 	);
     

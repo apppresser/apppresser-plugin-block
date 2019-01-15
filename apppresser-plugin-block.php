@@ -199,7 +199,10 @@ function field_one_callback() {
     	'apppush/appp-push.php' => '',
     	'appshare/appshare.php' => '',
     	'appswiper/apppresser-swipers.php' => '',
-    	'appwoo/apppresser-woocommerce.php' => ''
+    	'appwoo/apppresser-woocommerce.php' => '',
+    	'appcommerce/appcommerce.php' => '',
+    	'appcommunity/appcommunity.php' => '',
+    	'applms/applms.php' => ''
     );
     
     $plugins = array_diff_key($plugins, $keep);        

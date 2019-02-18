@@ -44,13 +44,6 @@ class AppPresserPluginBlock {
 		self::$dir_path = trailingslashit( plugin_dir_path( __FILE__ ) );
 		self::$dir_url = trailingslashit( plugins_url( null , __FILE__ ) );
 
-		// is main plugin active? If not, throw a notice and deactivate
-		$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		if ( is_array($active_plugins) && ! in_array( 'apppresser/apppresser.php', $active_plugins ) ) {
-			add_action( 'all_admin_notices', array( $this, 'apppresser_required' ) );
-			return;
-		}
-
 		add_filter( 'option_active_plugins', array( $this, 'appp_filter_plugins' ), 5 );
 		
 	}
@@ -112,18 +105,6 @@ class AppPresserPluginBlock {
 
 		return self::$is_apppv;
 	}
-
-	/**
-	* apppresser_required function.
-	*
-	* @access public
-	* @return void
-	*/
-	public function apppresser_required() {
-	echo '<div id="message" class="error"><p>'. sprintf( __( '%1$s requires the AppPresser Core plugin to be installed/activated. %1$s has been deactivated.', 'apppresser' ), self::PLUGIN ) .'</p></div>';
-	deactivate_plugins( self::$this_plugin, true );
-	}
-
 
 }
 AppPresserPluginBlock::run();

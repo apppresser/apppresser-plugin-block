@@ -72,7 +72,7 @@ class AppPresserPluginBlock {
 			return $active;
 		}
 
-		if( self::read_app_version() && ( !function_exists('wp_is_mobile') || function_exists('wp_is_mobile') && wp_is_mobile() ) ) {
+		if( self::read_app_version() ) {
 
 			$exclude = apply_filters( 'appp_exclude_plugins', $active );
 
